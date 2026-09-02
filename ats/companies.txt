@@ -1,0 +1,219 @@
+# ATS 公司看板 slug 表
+#
+# 「爬取」的第一步是猜 slug —— 公司在 ATS 上的短名。猜中了接口返回 200 + 岗位数组，
+# 猜错了 404。所以这份表是候选池，不是保证在线的名单。
+# 2026-08-28 实测命中率 27%（1106 探测 / 294 在线）。
+#
+# 用法：
+#   python3 tools/ats/scan.py --probe        只探测哪些 slug 活着，不筛岗位
+#   python3 tools/ats/scan.py                完整扫描
+#
+# 格式：[ats] 段头，其下每行若干 slug（空白分隔），# 起始为注释。
+# 加公司：直接往对应段里加 slug。想知道某公司的 slug，打开它的招聘页看 URL：
+#   jobs.ashbyhq.com/<slug>/...   jobs.lever.co/<slug>/...   job-boards.greenhouse.io/<slug>/...
+
+
+[ashby]   # 475 个候选
+  11x                       1password                 abnormal                  abridge                   ada                       adept
+  aifi                      airbyte                   aisera                    alfred                    allbound                  alloy
+  amplitude                 andela                    angellist                 anterior                  anyscale                  anysphere
+  anyword                   appen                     arc                       arcade                    arctic-wolf               arcticwolf
+  arize                     around                    artisan                   ashby                     assembled                 assemblyai
+  assent                    astronomer                attentive                 attio                     augmedix                  augment
+  augmentcode               automattic                avoma                     axonify                   baseten                   beautiful
+  bench                     benchsci                  bland                     blumira                   bolt                      borealisai
+  braintrust                braze                     brex                      browserbase               buffer                    buildkite
+  bun                       cal-com                   canny                     captions                  cardinal                  carta
+  cartesia                  cerebras                  chainguard                chroma                    circleci                  clari
+  clarifai                  clay                      cleanlab                  clearbrief                clearco                   clearml
+  clerk                     clio                      close                     coconut                   coda                      codametrix
+  codefresh                 codeium                   coder                     codium                    cognition                 cohealth
+  cohere                    cohere-health             cohesity                  comet                     common-room               commsor
+  commvault                 contextual-ai             convex                    corti                     courier                   coveo
+  craft                     cresta                    crewai                    crossbeam                 crowd-dev                 crusoe
+  cursor                    customerio                cyclica                   dagster                   dapper-labs               dashworks
+  datafold                  dataiku                   dataloop                  datarobot                 decagon                   deel
+  deepdub                   deepgram                  deepinfra                 deeplite                  deepscribe                defer
+  deno                      depot                     descript                  determined                docker                    doist
+  domino                    dooly                     dropzone                  druva                     dust                      e2b
+  earthly                   elastic                   electric                  elevenlabs                ellipsis                  encord
+  eppo                      eve                       everlaw                   exa                       exer                      expel
+  faire                     fal                       felix                     fiddler                   fig                       firecrawl
+  fireflies                 fireworks-ai              flipp                     float                     fly                       forethought
+  fullstory                 galileo                   gamma                     gather                    geotab                    gitlab
+  gitpod                    gladia                    glean                     glean-ai                  grafana                   granola
+  graphite                  greptile                  groq                      growthbook                guidde                    guru
+  gusto                     h2o                       handshake                 harness                   harvey                    hashicorp
+  hebbia                    heidi                     height                    hex                       hipeople-official         hootsuite
+  hopper                    hotjar                    huly                      humanloop                 hume                      huntress
+  hyperbolic                hypercare                 imbue                     impartner                 incident-io               inngest
+  instabase                 instantdb                 instructor                invertedai                invisible                 iterable
+  jane                      jobber                    june                      kaia                      kapwing                   keeper
+  kili                      klaviyo                   klue                      knock                     koho                      kore
+  koyeb                     labelbox                  lambda-labs               langchain                 langfuse                  langgraph
+  later                     launchdarkly              lavender                  layer6                    letta                     lexion
+  lightmatter               limber                    limitless                 lindy                     linear                    llamaindex
+  logrocket                 loopio                    lottiefiles               lovable                   lovo                      ltse
+  luma-ai                   luminance                 machinify                 magic                     magnet-forensics          material-security
+  mem                       mem0                      meow                      mercor                    mercury                   middesk
+  mintlify                  mistplay                  mistral                   modal                     momentum                  mostest
+  moveworks                 murf                      n8n                       nabla                     namespace                 navattic
+  neo-financial             neon                      neptune                   nerdwallet                netomi                    norm-ai
+  northflank                notion                    notion-labs               novita                    nuvei                     obsidian
+  octopus                   onesignal                 openai                    openevidence              openphone                 opentext
+  optimizely                opus                      opusclip                  orbit                     otter                     outerbounds
+  oven                      owl-ai                    oyster                    papaya                    paperspace                paradigm
+  parallel                  parloa                    partnerstack              patch                     patronus                  pave
+  pentavere                 perplexity                perplexity-ai             persona                   photoroom                 pictory
+  pinecone                  plane                     plausible                 playai                    plooto                    polymarket
+  poolside                  porter                    posthog                   powersync                 pragli                    predibase
+  prefect                   prime-intellect           prodigy                   productboard              prolific                  propelauth
+  properly                  pulley                    pydantic                  q4inc                     qdrant                    qodo
+  qstash                    railway                   ramp                      raycast                   reflect                   refuel
+  regal                     regie                     reka                      relevanceai               remofirst                 remotecom
+  render                    replicate                 replit                    reprise                   resemble                  resend
+  respeecher                retell                    reveal                    rewind                    rho                       rilla
+  rime                      rippling                  ritual                    rive                      robin-ai                  roboflow
+  rocicorp                  rogo                      rubrik                    runpod                    runway                    sama
+  sambanova                 sanctuary                 sardine                   savio                     scale                     scaleai
+  scribe                    segments                  sema4                     semantic-health           sentry                    sesame
+  sfcompute                 shakudo                   shortcut                  sierra                    sigmacomputing            signal1
+  sitemark                  smartlook                 snorkel                   solink                    sonder                    sourcegraph
+  speak                     speechmatics              spellbook                 spline                    split                     stackadapt
+  statsig                   storylane                 stytch                    suki                      suno                      supabase
+  supademo                  superannotate             superhuman                supernormal               surge                     surge-hq
+  sweep                     swiftly                   swiftmedical              symend                    synthesia                 synthflow
+  tabnine                   tailscale                 tandem                    tavus                     tealbook                  teamflow
+  telus-digital             temporal                  tennr                     tenstorrent               tetra                     thinkific
+  todyl                     together-ai               tome                      trigger                   trigger-dev               truera
+  trulioo                   tulip                     turing                    twelvelabs                typeface                  ultimate
+  unbounce                  unify                     unit                      upstash                   v0                        v7labs
+  val-town                  vapi                      veeam                     veed                      vellum                    velocity-global
+  vena                      vercel                    vidyard                   visier                    voxel51                   waabi
+  walnut                    wandb                     warp                      wattpad                   wealthsimple              weaviate
+  weights-and-biases        whylabs                   windmill                  windsurf                  workos                    writer
+  xanadu                    yellow                    zapier                    zenhub                    zep                       zeplo
+  zero
+  # 2026-08-28 扩表：探测确认在线
+  benevity                  bluedot                   clickhouse                coderabbit                docebo                    etched
+  factory                   gorgias                   gumloop                   hightouch                 lancedb                   livekit
+  lorikeet                  maple                     materialize               miovision                 motherduck                nomic
+  phonic                    physicalintelligence      plotly                    procurify                 pylon                     relayfi
+  runloop                   thinkingmachines          turbopuffer               unstructured
+
+[lever]   # 187 个候选
+  abnormal                  ada                       ada-support               affirm                    aifi                      alfred
+  alloy                     anduril                   anysphere                 anyword                   appen                     applied-intuition
+  arctic-wolf               arcticwolf                assent                    attentive                 automattic                axonify
+  benchsci                  blumira                   borealisai                braze                     brex                      buffer
+  buildkite                 canva                     carta                     cgi                       chainguard                circleci
+  clearco                   clio                      close                     coda                      codefresh                 cohere
+  cohesity                  commvault                 coveo                     craft                     cruise                    customerio
+  d2l                       dataloop                  deel                      depot                     dialpad                   discord
+  doist                     doordash                  dropzone                  druva                     earthly                   elevenlabs
+  eve                       everlaw                   expel                     faire                     fig                       figma
+  fiverr                    flipp                     geotab                    getir                     gitlab                    gopuff
+  gusto                     handshake                 harness                   hashicorp                 hipeople-official         hootsuite
+  hopper                    hotjar                    huggingface               huntress                  hypercare                 instacart
+  invisible                 iterable                  jane                      jobber                    kili                      kinaxis
+  klaviyo                   koho                      later                     lavender                  layer6                    lightspeed
+  loopio                    luminance                 lyft                      manulife                  material-security         matterport
+  mercury                   middesk                   mistplay                  mistral                   mostest                   motive
+  namespace                 neo                       nerdwallet                netflix                   nuro                      nuvei
+  obsidian                  octopus                   onesignal                 opentext                  oyster                    paperspace
+  pentavere                 perplexity                persona                   pilot                     pinterest                 plaid
+  plooto                    prolific                  q4inc                     ramp                      raycast                   rbc
+  rbcgroup                  reddit                    reflect                   regie                     remote                    rippling
+  ritual                    rubrik                    runway                    sama                      samsara                   sardine
+  scaleapi                  scotiabank                scribd                    segments                  semantic-health           shakudo
+  shopify                   shopify-lever             signal1                   sitemark                  sonder                    spellbook
+  spotify                   stability                 stability-ai              stackadapt                sunlife                   suno
+  superannotate             surge-hq                  swiftly                   swiftmedical              symend                    tailscale
+  td                        td-bank                   tealbook                  telus                     telus-digital             telusinternational
+  thinkific                 todyl                     toptal                    tulip                     turing                    unbounce
+  unit                      upwork                    v7labs                    veeam                     vena                      verafin
+  vidyard                   visier                    voiceflow                 wattpad                   waymo                     wealthsimple
+  zoox
+  # 2026-08-28 扩表：探测确认在线
+  achievers                 crowdriff                 deepgenomics              docebo                    fullscript                metabase
+  pipedream                 tecton                    waveapps                  zilliz
+
+[greenhouse]   # 444 个候选
+  11x                       abnormal                  abridge                   ada                       affirm                    afterpay
+  aifi                      airbase                   airbnb                    airtable                  aisera                    alfred
+  alignmentresearch         allbound                  ambience                  amplitude                 anduril                   angellist
+  angi                      anthropic                 anysphere                 anyword                   apollo                    appen
+  applied-intuition         arc                       arctic-wolf               arcticwolf                around                    artisan
+  asana                     assent                    atlassian                 augmedix                  augmentcode               automattic
+  avoma                     axonify                   benchling                 block                     blumira                   booking
+  borealisai                borrowell                 box                       braze                     brex                      buildkite
+  bun                       calico                    canny                     canva                     captions                  carbonhealth
+  carta                     chainguard                character-ai              checkr                    chime                     circleci
+  clari                     cleanlab                  clearco                   clearml                   clickup                   clio
+  cloudflare                cockroachlabs             coda                      codametrix                codefresh                 cognism
+  cohere                    cohesity                  coinbase                  common-room               commsor                   commure
+  commvault                 compass                   confluent                 contentful                convex                    copyai
+  corewave                  corti                     coveo                     craft                     cresta                    crossbeam
+  crowd-dev                 crusoeenergy              current                   cursor                    customerio                dapperlabs
+  databricks                datadog                   dataiku                   dataloop                  datarobot                 dave
+  decagon                   deepdub                   deepinfra                 deepl                     deepmind                  deepscribe
+  defer                     deno                      depot                     descript                  determined                dialpad
+  discord                   docusign                  domino                    doordash                  drata                     drop
+  dropbox                   dropzone                  druva                     duolingo                  earnin                    earthly
+  ecobee                    eightsleep                elastic                   electric                  epochai                   eppo
+  etsy                      exer                      expedia                   expel                     faire                     fastly
+  fiddler                   fig                       figma                     flatiron                  flipp                     fly
+  forethought               framer                    freshworks                fullstory                 gather                    geotab
+  gitlab                    gitpod                    glean                     gong                      grafanalabs               grammarly
+  graphite                  groq                      guidde                    gusto                     h2o                       handshake
+  harness                   harvey                    headway                   heap                      hebbia                    heidi
+  height                    hinge-health              hipeople-official         hippo                     hippocraticai             hootsuite
+  hopper                    huggingface               huly                      huntress                  hyperbolic                hypercare
+  impartner                 inflection                inngest                   instacart                 instantdb                 intercom
+  invisible                 ironcladapp               isomorphiclabs            iterable                  jane                      jasper
+  jobber                    june                      justworks                 kaia                      khealth                   kili
+  kin                       kinaxis                   klarna                    klaviyo                   koho                      kore
+  lacework                  lambdalabs                later                     launchdarkly              lavender                  layer6
+  league                    lemonade                  letta                     levels                    lexion                    lilt
+  limber                    lindy                     logrocket                 loom                      loopio                    lottiefiles
+  lovo                      ltse                      lusha                     lyft                      lyra                      machinify
+  magic                     material-security         mejuri                    meow                      miro                      mistplay
+  mistralai                 mixpanel                  monday                    mongodb                   monzo                     mostest
+  moveworks                 murf                      n26                       nabla                     namespace                 navattic
+  nebius                    neptune                   nerdwallet                netlify                   netomi                    newfront
+  nextinsurance             norm                      notion                    novita                    nuance                    nuro
+  observeai                 obsidian                  octopus                   omada                     oneleet                   onesignal
+  openai                    opendoor                  openevidence              openloop                  opentext                  optimizely
+  orbit                     orca                      oura                      outreach                  oven                      oyster
+  papaya                    paperspace                partnerstack              pave                      paycom                    paylocity
+  peloton                   pentavere                 perplexity                perplexityai              photoroom                 pinterest
+  plaid                     plane                     planetscale               playai                    poolside                  posthog
+  powersync                 pragli                    productboard              prolific                  pulley                    q4inc
+  qodo                      qstash                    raycast                   recursionpharmaceuticals  reddit                    redis
+  redwoodresearch           reflect                   refuel                    regie                     relevanceai               remofirst
+  render                    reprise                   resemble                  respeecher                retool                    reveal
+  revolut                   rho                       rime                      ritual                    rive                      robin-ai
+  robinhood                 rocicorp                  rogo                      root                      rubrik                    runpod
+  runwayml                  salesforce                sama                      samsara                   sanity                    savio
+  scale-ai                  scaleai                   secureframe               segment                   segments                  semantic-health
+  sendgrid                  sentry                    servicenow                sesame                    sezzle                    shakepay
+  shakudo                   shopify                   shortcut                  sierra                    sierraai                  signal1
+  singlestore               sitemark                  smartling                 smartlook                 snowflake                 snyk
+  sofi                      sonder                    sourcegraph               spellbook                 spline                    spring-health
+  squarespace               squareup                  ssi                       stackadapt                statsig                   storyblok
+  storylane                 stripe                    suki                      supabase                  supademo                  superannotate
+  surge-hq                  swiftmedical              sword                     symend                    tailscale                 tandem
+  tealbook                  teamflow                  telus-digital             temporaltechnologies      tempus                    tenable
+  tennr                     tenstorrent               thinkific                 thumbtack                 todyl                     together
+  trigger-dev               trinet                    tripadvisor               truelayer                 truera                    tugboat
+  tulip                     turing                    twilio                    typeface                  unbounce                  unity
+  upstash                   v7labs                    val-town                  vanta                     varo                      veeam
+  veed                      velocity-global           vena                      vercel                    verily                    vidyard
+  visier                    voltagepark               waabi                     walnut                    wave                      wealthsimple
+  webflow                   whoop                     whylabs                   wise                      wiz                       workday
+  writer                    xanadu                    yellow                    yelp                      zapier                    zendesk
+  zenhub                    zeplo                     zero                      zillow                    zip                       zoominfo
+  # 2026-08-28 扩表：探测确认在线
+  clickhouse                coursera                  fivetran                  hightouch                 hivestack                 knak
+  poka                      starburst                 toloka                    typeform                  udemy                     vectara
+  workleap                  worldlabs                 xai

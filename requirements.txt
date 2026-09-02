@@ -1,0 +1,3 @@
+# The scanner layer (ats/) uses the Python standard library only — nothing to install.
+# This is required only for the optional agent layer (agent/).
+anthropic>=0.40
