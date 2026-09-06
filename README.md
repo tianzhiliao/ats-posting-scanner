@@ -1,14 +1,14 @@
 # ATS Posting Scanner
 
-Scans public Ashby, Lever, and Greenhouse job boards through their **official public APIs**, normalizes three incompatible schemas into one table, and verifies when each posting was *actually* first published.
+Scans public Ashby, Lever, and Greenhouse job boards through their official APIs, normalizes their schemas, and inspects posting dates and job details before filtering candidates.
 
-No browser automation. No HTML parsing (one exception, noted below). No scraping. The scanner layer is HTTP GET plus `json.loads`, on the Python standard library — **nothing to install**.
+The scanner uses HTTP requests and Python standard-library parsing. It does not require browser automation or third-party Python packages. The optional agent layer has a separate dependency.
 
 ## Why these APIs are public
 
-All three vendors let customer companies embed their job board into their own careers page. That means the board data has to be readable from the browser, which means it has to be a public, unauthenticated JSON endpoint. Fighting a bot wall to scrape LinkedIn is a different activity from calling an endpoint that exists to be called.
+The three vendors provide public endpoints for published job boards. The scanner reads those endpoints directly:
 
-One request returns every open posting at one company, so sweeping a thousand boards takes minutes, not hours.
+A board response includes multiple postings, which keeps the first scan separate from the more expensive detail requests.
 
 ```
 GET https://api.ashbyhq.com/posting-api/job-board/{slug}?includeCompensation=true
@@ -26,13 +26,13 @@ The three vendors agree on almost nothing. [`ats/ats.py`](ats/ats.py) flattens t
 |---|---|---|---|
 | `title` | `title` | **`text`** | `title` |
 | `loc` | `location` + `secondaryLocations[]` | `categories.location` + `allLocations[]` | `location.name` + `metadata[]` |
-| `posted` | `publishedAt` (ISO Z) | `createdAt` (**epoch millis**) | `updated_at` (**not trustworthy — see below**) |
+| `posted` | `publishedAt` (last publication, ISO Z) | `createdAt` (epoch millis) | `updated_at` (last update, not first publication) |
 | `remote` | `isRemote` (boolean) | `workplaceType` | — |
 | `url` | `jobUrl` / `applyUrl` | `hostedUrl` | `absolute_url` |
 | body | `descriptionHtml`, in the list response | `descriptionPlain` + `lists[]`, must be joined | detail endpoint only |
 | salary | `compensation`, structured | — | buried in prose, needs regex |
 
-## The thing this tool exists for: `updated_at` lies
+## Posting dates have different meanings
 
 Greenhouse's list endpoint exposes only `updated_at` — the last time an employer *touched* the record. Fixing a typo, moving a department, or a bulk refresh all bump it. Use it to rank "newest postings" and you will put six-month-old listings at the top.
 
@@ -47,9 +47,11 @@ On a full run (2026-08-28), of 28 surviving candidates **15 (54%) had their age 
 | Block | Applied Research Intern | 1.9 days | **79.9 days** | 42× |
 | Lyft | ML Engineer, Business & Ads | 1.8 days | **53.0 days** | 29× |
 
-Ranking on the list endpoint alone puts Lyft, Block, Dialpad and Stripe first as the "freshest" roles. The genuinely freshest were two GitLab postings at 7.7 and 7.8 days — they just happened to be the ones where `updated_at` was not lying.
+Ranking on the list endpoint alone puts Lyft, Block, Dialpad and Stripe first as the "freshest" roles. In that historical candidate set, the two GitLab postings were 7.7 and 7.8 days old; their update dates happened to agree with their first-publication dates.
 
-The real date lives only in the detail endpoint's `first_published`, so **every surviving candidate gets a detail fetch**. Ashby's `publishedAt` and Lever's `createdAt` do not have this problem; they are honest in the list response.
+For Greenhouse, the detail endpoint exposes `first_published`, so every surviving candidate gets a detail fetch. Ashby documents `publishedAt` as the date a posting was **last published**, which can change after republication; Lever's `createdAt` is a creation timestamp. These fields should not be treated as interchangeable proof of an original publication date. See [Ashby's public API reference](https://developers.ashbyhq.com/docs/public-job-posting-api).
+
+The current `enrich.py` output still places all three values under `first_published`. For Ashby and Lever, treat that as a legacy field name and inspect the source ATS. The scanner does not yet maintain a durable first-seen history, so it cannot reconstruct a posting's original publication when the source does not supply it. The figures above describe the dated run, not current openings or a general error rate.
 
 ## Three more failure modes worth knowing
 
@@ -77,7 +79,7 @@ years=['3+ years in speech synthesis (<span data-highlig']
 # 1. Sweep boards -> out/raw.json (title matches) + out/cand.json (after coarse filter)
 python3 ats/scan.py
 
-# 2. Per-posting detail: true publish date, JD signals, liveness -> out/enriched.json
+# 2. Per-posting detail: source dates, JD signals, liveness -> out/enriched.json
 python3 ats/enrich.py
 
 # 3. Pull the application form fields for one posting
@@ -90,15 +92,15 @@ Useful variants:
 python3 ats/scan.py --probe                      # only test which slugs are alive
 python3 ats/scan.py --slug cohere --ats ashby    # single company
 python3 ats/scan.py --ats greenhouse --max-age 30
-python3 ats/scan.py --now 2026-08-26             # reproduce a historical run
+python3 ats/scan.py --now 2026-08-26             # change the age-reference date; responses are still live
 python3 ats/enrich.py --workers 1 --delay 1.5    # when rate limited
 ```
 
-**The split is deliberate.** The scan stage touches only list endpoints — fast, safe at 40 threads, and enough to drop ~95% of the noise. Detail endpoints are slow and rate-limit, so they are reserved for candidates that already survived filtering. `enrich.py` defaults to 8 threads with backoff.
+**The split is deliberate.** The scan stage touches only list endpoints and defaults to 40 threads. In the documented run, coarse filtering dropped about 95% of title matches; adjust concurrency for the provider and network. Detail endpoints are slow and rate-limit, so they are reserved for candidates that already survived filtering. `enrich.py` defaults to 8 threads with backoff.
 
 ## Optional agent layer
 
-[`agent/`](agent/) wraps the scanner in 8 tools and lets Claude drive them. **The scraping code is unchanged** — what changes is who decides the next move: which slugs to expand, whether `live=0` means "no jobs" or "the network broke", when a filtering criterion is itself wrong, and when to stop.
+[`agent/`](agent/) is an experimental wrapper that exposes the scanner through 8 tools for Claude. It is intended to choose which boards to inspect and when to stop. The repository does not include a recorded successful agent run or evaluation results; inspect its model ID and SDK settings before a paid run.
 
 ```bash
 export ANTHROPIC_API_KEY=...
@@ -126,12 +128,13 @@ MIT
 
 ## 中文简介
 
-用 Ashby / Lever / Greenhouse 三家 **官方公开接口** 扫描招聘看板，把三套互不兼容的字段归一成一张表，并核验每条岗位**真实的首次发布日**。
+通过 Ashby / Lever / Greenhouse 三家官方公开接口扫描招聘看板，归一字段，并检查岗位详情和日期来源。
 
-没有浏览器自动化，没有 HTML 解析（仅 Lever 表单一处例外），不是爬虫。扫描层是 HTTP GET + `json.loads`，纯标准库，**无需安装任何依赖**。
+扫描层使用 Python 标准库，无需浏览器自动化或第三方 Python 包；可选 agent 层另需安装依赖。
 
-核心价值在一件事：**Greenhouse 列表接口的 `updated_at` 会撒谎**——它是雇主上次改动记录的时间，改个错别字就会刷新。2026-08-28 全量跑的 28 条候选里，15 条（54%）年龄被低估 3 倍以上，最夸张的 Cresta 是 24.9 天 vs 真实 716.7 天。真实发布日只在详情接口的 `first_published` 里。
+日期语义需要分别处理：Greenhouse 的 `updated_at` 是更新时间，详情中的 `first_published` 才是首次发布；Ashby 的 `publishedAt` 是最近一次发布，Lever 的 `createdAt` 是创建时间。2026-08-28 那次 28 条候选中，15 条的年龄按更新时间计算被低估了 3 倍以上。这是一次历史观察，不代表当前岗位或总体错误率。
 
 另外三个坑同样是踩出来的：Python 的 SSL 证书问题让首轮 393 个看板**静默全灭**（`live=0`，输出看着完全正常）；Greenhouse 的 404 会返回结构完整的 JSON，导致 444 个「在线」看板里有 328 个是幽灵——**这个 bug 没污染任何岗位数据，只错了统计量，因此最难发现**；以及 HTML 实体与标签的解码顺序。
 
 完整技术笔记见 [`ats/NOTES.zh.md`](ats/NOTES.zh.md) 与 [`agent/NOTES.zh.md`](agent/NOTES.zh.md)。
+
